@@ -12,6 +12,7 @@ import {
 	NumberInputField,
 } from "@chakra-ui/react";
 import "./App.css";
+import Marketplace from "./components/Marketplace";
 
 function App() {
 	const {
@@ -99,6 +100,7 @@ function App() {
 
 	return (
 		<>
+			<Marketplace />
 			<Flex sx={{ margin: 3 }}>
 				<Box p="2">
 					<Heading size="md">Moralis OpenSea</Heading>
