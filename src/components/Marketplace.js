@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import {
+    MediaRenderer,
+    useActiveListings,
+    useMarketplace,
+  } from "@thirdweb-dev/react";
 
 function Marketplace() {
     const [assets, setAssets] = useState([])
