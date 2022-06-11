@@ -10,20 +10,27 @@ const SellPrompt = () => {
     const [ tokenId, setTokenId ] = useState('0'); 
     const [ paymentCurrency, setPaymentCurrency ] = useState('0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747'); //USDC 
 
-    const sdk = new ThirdwebSDK("mumbai"); 
-    const contract = sdk.getMarketplace("{{")
+
 
     // function to create a listing on thirdweb
-    const listing = {
-        assetContractAddress: address,
-        tokenId: tokenId,
-        startTimestamp: new Date(), // asap
-        listingDurationInSeconds: 86400, // 24 hours 
-        quantity: quantity, 
-        currencyContractAddress: paymentCurrency,
-        buyoutPricePerToken: price.toString()
-    }
 
+    const createListing = async () => {
+        const listing = {
+            assetContractAddress: address,
+            tokenId: tokenId,
+            startTimestamp: new Date(), // asap
+            listingDurationInSeconds: 86400, // 24 hours 
+            quantity: quantity, 
+            currencyContractAddress: paymentCurrency,
+            buyoutPricePerToken: price.toString()
+        }
+    
+        const sdk = new ThirdwebSDK("mumbai"); 
+        const contract = sdk.getMarketplace("{{")
+        const tx = await contract.direct.createListing(listing); 
+        const receipt = tx.receipt; 
+        const id = tx.id; 
+    }
     return (
         <div>
             <h1 className="font-semibold text-white">Sell Prompt</h1>
@@ -43,7 +50,11 @@ const SellPrompt = () => {
                         <p className="text-red-500 text-xs italic">Please choose a price.</p>
                     </div>
                     <div className="flex justify-center">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                        <button 
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button"
+                            onClick={() => {
+                                createListing(); 
+                            }}>
                             Confirm
                         </button>
                     </div>
