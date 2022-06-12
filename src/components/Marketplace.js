@@ -3,6 +3,7 @@ import {
     useEditionDrop,
     useNFTs
   } from "@thirdweb-dev/react";
+import { Link } from "react-router-dom";
 
 function Marketplace() {
     const nftCollection = useEditionDrop("0xe249989ebBf2fa317D623Ce7f216A6A0c5e96d95");
@@ -33,12 +34,23 @@ function Marketplace() {
                                 
                             </div>
                             <div className="px-6 pt-2 pb-3 gap-4 mx-4">
-                                <button class=" mx-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                                
+                                <button class="mx-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
                                     Buy
                                 </button>
-                                <button class="  mx-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
-                                    Sell
-                                </button>
+                                <Link to='sell' state={{
+                                    tokenId: parseInt(nft.metadata.id._hex, 16),
+                                    name: nft.metadata.name, 
+
+                                }}>
+                                    <button 
+                                        class="mx-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                                    >
+                                        Sell
+                                    </button>
+                                </Link>
+
+
                             </div>
                         </div>
                     )

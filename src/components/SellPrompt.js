@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { ListingType, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { useAddress, useCreateDirectListing, useMetamask, useNetwork, useNetworkMismatch, useMarketplace } from "@thirdweb-dev/react";
+import { useLocation } from 'react-router-dom'; 
 
-const SellPrompt = () => {
+const SellPrompt = ({ }) => {
+
+    const location = useLocation(); 
+    const { tokenId, name } = location.state; 
 
     // later move this to prop
     const [tokenAddress, setTokenAddress] = useState("0xe249989ebBf2fa317D623Ce7f216A6A0c5e96d95");
-    const [tokenId, setTokenId] = useState('0');
-    const [paymentCurrency, setPaymentCurrency] = useState('0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747'); //USDC 
-
+    //const [tokenId, setTokenId] = useState('0');
+    const [paymentCurrency, setPaymentCurrency] = useState('0x0000000000000000000000000000000000001010'); //USDC 
+    // MATIC 0x0000000000000000000000000000000000001010
+    // USDC 0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747
     const address = useAddress();
     const marketplace = useMarketplace("0xb9661439AB5e2839Df8b0c0a3f377895cA582a7B");
     const networkMismatch = useNetworkMismatch(); 
@@ -80,6 +85,15 @@ const SellPrompt = () => {
             <div className="w-full max-w-xs">
                 <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                     onSubmit={(e) => handleCreateListing(e)}>
+
+                    <div className="mb-6">
+                        <p>
+                            tokenId: {tokenId}
+                        </p>
+                        <p>
+                            name: {name}
+                        </p>
+                    </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" for="quantity">
                             Quantity
@@ -90,7 +104,10 @@ const SellPrompt = () => {
                         <label className="block text-gray-700 text-sm font-bold mb-2" for="price">
                             Price
                         </label>
-                        <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="price" type="number" placeholder="0.00" />
+                        <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="price" 
+                            type="number" 
+                            step="0.01"
+                            placeholder="0.00" />
                         <p className="text-red-500 text-xs italic">Please choose a price.</p>
                     </div>
                     <div className="flex justify-center">
