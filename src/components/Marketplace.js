@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import {
     useEditionDrop,
-    useNFTs
+    useNFTs,
+    useMarketplace,
+    useActiveListings
   } from "@thirdweb-dev/react";
 
 function Marketplace() {
     const nftCollection = useEditionDrop("0xe249989ebBf2fa317D623Ce7f216A6A0c5e96d95");
+    const marketplace = useMarketplace("0xb9661439AB5e2839Df8b0c0a3f377895cA582a7B")
+    const { data: listings, isLoading: loadingListings } =
+    useActiveListings(marketplace);
     const { data: nfts, isLoading } = useNFTs(nftCollection);
 
-    console.log(nfts)
+    console.log(listings)
 
     if (isLoading) {
         return <p>Loading</p>
