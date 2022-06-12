@@ -3,7 +3,9 @@ import {
     useEditionDrop,
     useNFTs,
     useMarketplace,
-    useActiveListings
+    useActiveListings,
+    useNetworkMismatch,
+    useNetwork
   } from "@thirdweb-dev/react";
 import { Link } from "react-router-dom";
 
@@ -13,6 +15,9 @@ function Marketplace() {
     const marketplace = useMarketplace("0xb9661439AB5e2839Df8b0c0a3f377895cA582a7B")
     const { data: listings, isLoading: loadingListings } = useActiveListings(marketplace);
 
+    const networkMismatch = useNetworkMismatch();
+    const [, switchNetwork] = useNetwork();
+
     console.log(listings)
 
     if (isLoading) {
@@ -21,11 +26,15 @@ function Marketplace() {
 
     async function buyNft(id, amount) {
         try {
-          await marketplace?.buyoutListing(id, amount);
-          alert("NFT bought successfully!");
+            if (networkMismatch) {
+                switchNetwork && switchNetwork(4);
+                return;
+            }
+            await marketplace?.buyoutListing(id, amount);
+            alert("NFT bought successfully!");
         } catch (error) {
-          console.error(error);
-          alert(error);
+            console.error(error);
+            alert(error);
         }
       }
 
@@ -78,6 +87,31 @@ function Marketplace() {
         }
     }
 
+
+    function getAverage(id) {
+        try {
+            let filtered_listings = listings.filter((listing) => {
+                return parseInt(listing.asset.id._hex, 16) == id
+            })
+    
+            console.log(filtered_listings)
+    
+            let amount = 0
+            let summ = 0
+    
+            for (let listing of filtered_listings) {
+                amount += parseInt(listing.quantity._hex, 16)
+                summ +=parseInt(listing.buyoutPrice._hex, 16)
+            }
+    
+            return Math.round(summ / amount) 
+        } catch {
+            return "Fuck"
+        }
+    }
+
+
+
     return (
         <div class="grid grid-cols-4 gap-4 mx-4">
             {
@@ -97,6 +131,7 @@ function Marketplace() {
                                 })}
                                 
                             </div>
+                            <p>AveragePrice: ${getAverage(parseInt(nft.metadata.id._hex, 16))}</p>
                             <div className="px-6 pt-2 pb-3 gap-4 mx-4">
                                 <button class=" mx-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" 
                                     onClick={() => buyTokens(parseInt(nft.metadata.id._hex, 16))}>
